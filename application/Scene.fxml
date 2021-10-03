@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+   <left>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="Algorithm" textAlignment="CENTER" wrappingWidth="96.26953125" />
+            <ChoiceBox fx:id="algorithmChoiceBox" prefWidth="150.0" />
+            <Button fx:id="startBtn" mnemonicParsing="false" onAction="#startSearching" prefWidth="100.0" text="Start">
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="resetBtn" mnemonicParsing="false" onAction="#resetMap" prefWidth="100.0" text="Reset" />
+            <Button fx:id="newMapBtn" mnemonicParsing="false" onAction="#createNewMap" prefWidth="100.0" text="New Map">
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <Pane prefHeight="652.0" prefWidth="955.0" BorderPane.alignment="CENTER">
+         <children>
+            <Canvas fx:id="canvasID" height="650.0" layoutY="3.0" width="955.0" />
+         </children>
+      </Pane>
+   </center>
+</BorderPane>
