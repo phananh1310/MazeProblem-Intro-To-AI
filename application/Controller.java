@@ -78,8 +78,8 @@ public class Controller {
     	for (int i=0;i<rows;i++)
     		for (int j=0;j<columns;j++)
     			newMaze[i][j]=maze[i][j];
- 		
-    	// create a tree
+    	
+    	// create initial Node
     	Node root = new Node(newMaze);
     	
     	// to note the path has gone but not the solution
@@ -91,7 +91,7 @@ public class Controller {
     		public void run(){
     		while(true) {
      			Node newNode;
-     			// this node is for traversing tree
+     			// this node is for traversing maze
     			if (fringe.isEmpty()) {
      				maze = new int[rows][columns]; // Not found
      				break;
@@ -124,7 +124,7 @@ public class Controller {
     				e.printStackTrace();
     			}
     			
-    			ArrayList<Node> Arr = newNode.childNodeArr;
+    			ArrayList<Node> Arr = newNode.expand();
      				for (Node temp: Arr) {
      					fringe.push(temp);
      				}
