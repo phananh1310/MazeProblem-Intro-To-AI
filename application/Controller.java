@@ -31,7 +31,7 @@ import javafx.scene.text.TextAlignment;
 public class Controller implements Initializable {
 	
 	ObservableList<String> list = FXCollections.observableArrayList();
-	public int blockSize=12;
+	public int blockSize=20;
 	public int pathingDelay = 100;
 
     public final static int wallCode = 0; // walls
@@ -45,9 +45,9 @@ public class Controller implements Initializable {
     // color for wall, path, empty, visited
 	Color[] color = new Color[] {
             Color.AQUA,
-            Color.rgb(200,0,0),
+            Color.BLACK,
             Color.WHITE,
-            Color.GRAY,
+            Color.PINK,
             Color.YELLOW,
             Color.RED,
         };         
@@ -82,9 +82,10 @@ public class Controller implements Initializable {
     private ChoiceBox<String> algorithmChoiceBox;
     String BFS = "BFS Algorithm";
 	String DFS = "DFS Algorithm";
+	String GreedyBFS = "Best First Search Algorithm";
     void loadChoice() {
     	list.removeAll();
-    	list.addAll(BFS,DFS);
+    	list.addAll(BFS,DFS,GreedyBFS);
     	algorithmChoiceBox.getItems().addAll(list);
     }
     
@@ -109,6 +110,10 @@ public class Controller implements Initializable {
     	}
     	else if (algorithmChoiceBox.getValue().equals(BFS)) {
     		A = new BFS();
+    		pathingDelay = 100;
+    	}
+    	else if(algorithmChoiceBox.getValue().equals(GreedyBFS)) {
+    		A = new GreedyBFS();
     		pathingDelay = 100;
     	}
     	else 
