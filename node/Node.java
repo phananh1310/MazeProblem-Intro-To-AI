@@ -44,9 +44,7 @@ public class Node {
 		this.Action = ActionConstant;
 		this.mazeState = updateState(p,this.Action);
 		where();
-		
-		this.expand();
-		
+				
 	}
 	public Node() {
 		this.mazeState = new int[c.rows][c.columns];
@@ -58,7 +56,6 @@ public class Node {
 		this.dept=0;
 		this.mazeState=maze;
 		where();
-		this.expand();
 
 	}
 	public boolean checkGoal() {
@@ -107,31 +104,32 @@ public class Node {
 	};
 
 	// find children for this node if empty -> add to childArr
-	public void expand() {
+	public ArrayList<Node> expand() {
 		
+		ArrayList<Node> arr = new ArrayList<Node>();
 		if (mazeState[row+1][column]==Controller.emptyCode||mazeState[row+1][column]==Controller.endCode) {
-			this.childNodeArr.add(new Node(this,MOVEDOWN));
+			arr.add(new Node(this,MOVEDOWN));
 		}
 		
 		if(mazeState[row-1][column]==Controller.emptyCode||mazeState[row-1][column]==Controller.endCode){
 
-			this.childNodeArr.add(new Node(this,MOVEUP));
+			arr.add(new Node(this,MOVEUP));
 
 		}
 		
 
 		if(mazeState[row][column+1]==Controller.emptyCode||mazeState[row][column+1]==Controller.endCode) {
-			this.childNodeArr.add(new Node(this,MOVERIGHT));
+			arr.add(new Node(this,MOVERIGHT));
 
 		}
 		
 
 		if(mazeState[row][column-1]==Controller.emptyCode||mazeState[row][column-1]==Controller.endCode) {
 
-			this.childNodeArr.add(new Node(this,MOVELEFT));
+			arr.add(new Node(this,MOVELEFT));
 		}
 		
-		
+		return arr;
 	};
 	
 	// test this class, view node state in console
