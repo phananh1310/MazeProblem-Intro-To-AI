@@ -44,6 +44,7 @@ public class Node {
 		this.Action = ActionConstant;
 		this.mazeState = updateState(p,this.Action);
 		where();
+		this.pathCost = c.rowEnd - this.row + c.columnEnd - this.column;
 				
 	}
 	public Node() {
@@ -56,6 +57,7 @@ public class Node {
 		this.dept=0;
 		this.mazeState=maze;
 		where();
+		this.pathCost = c.rowEnd - this.row + c.columnEnd - this.column;
 
 	}
 	public boolean checkGoal() {
