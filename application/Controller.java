@@ -1,12 +1,22 @@
 package application;
 import node.Node;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Queue;
+import java.util.ResourceBundle;
 import java.util.Stack;
 
+import algorithms.Algorithms;
+import algorithms.DFS;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -19,9 +29,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
-public class Controller {
+public class Controller implements Initializable {
+	
+	ObservableList<String> list = FXCollections.observableArrayList();
 	public int blockSize=12;
-	public int pathingDelay = 70;
+	public int pathingDelay = 1000;
 
     public final static int wallCode = 0; // walls
     public final static int pathCode = 1; // current path
@@ -47,8 +59,8 @@ public class Controller {
 
     @FXML
     private Canvas canvasID;
-    public int rows=51;
-	public int columns=71;
+    public int rows=11;
+	public int columns=11;
 	// Goal
     public int rowEnd = rows-2;
     public int columnEnd = columns-2;
@@ -62,41 +74,58 @@ public class Controller {
 
     @FXML
     private Button startBtn;
+    
+    
 
     @FXML
     private ChoiceBox<String> algorithmChoiceBox;
-
+    
+    void loadChoice() {
+    	String BFS = "BFS Algorithm";
+    	String DFS = "DFS Algorithm";
+    	list.removeAll();
+    	list.addAll(BFS,DFS);
+    	algorithmChoiceBox.getItems().addAll(list);
+    }
+    
+    @Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		loadChoice();
+	}
+    
     @FXML
     void startSearching(ActionEvent event) {
-    	
+
     	// after the NEW MAP, we would have an initial state of the maze by 2D array
     	// and now we have to make a problem-solved tree from that state
+    	// use the algorithm to solve
+    	Algorithms A;
     	
-    	// use the algorithm to solve/ transfer, DFS first
-    	Stack<Node> fringe = new Stack<Node>();
-    	int [][] newMaze = new int [rows][columns];
-    	for (int i=0;i<rows;i++)
-    		for (int j=0;j<columns;j++)
-    			newMaze[i][j]=maze[i][j];
+    	A = new DFS();
     	
+    	
+    	this.Search(A);	
+}
+
+    void Search(Algorithms A) {
     	// create initial Node
-    	Node root = new Node(newMaze);
+    	Node root = new Node(maze);
     	
     	// to note the path has gone but not the solution
     	int [][] visited = new int [rows][columns];
     	
     	//start searching, use a Stack fringe (DFS)
-    	fringe.push(root);
+    	A.put(root);
  		final Thread delay = new Thread(){
     		public void run(){
     		while(true) {
      			Node newNode;
      			// this node is for traversing maze
-    			if (fringe.isEmpty()) {
+    			if (A.fringe.isEmpty()) {
      				maze = new int[rows][columns]; // Not found
      				break;
      			}
-    			newNode = fringe.pop();    			
+    			newNode = A.get();    			
     			// take state of the current newNode
     			maze = newNode.mazeState;
 
@@ -126,59 +155,14 @@ public class Controller {
     			
     			ArrayList<Node> Arr = newNode.expand();
      				for (Node temp: Arr) {
-     					fringe.push(temp);
+     					A.put(temp);
      				}
     			}
     		}
     	};
     	delay.start(); 
- 		
-    	
-}
-
- // using DFS
-    /*
- 	final public int[][] treeSearch(int maze[][],Stack<Node> fringe) {
- 		
- 		
- 		return root.childNodeArr.get(1).mazeState;
- 		
- 		fringe.push(newNode);
- 		while(true) {
- 			if (fringe.isEmpty()) {
- 				return new int[rows][columns]; // Not found
- 			}
- 			
- 			newNode = fringe.pop();
- 	    	
- 	    	if (newNode.checkGoal())
- 				return newNode.mazeState;
- 			 
- 			ArrayList<Node> Arr = newNode.expand();
- 			if (!Arr.isEmpty())
- 				for (Node temp: Arr) {
- 					fringe.push(temp);
- 				}
- 			else {
- 	 		//newNode.mazeState[newNode.row][newNode.column]=visitedCode;
- 			}
- 		}
- 		
- 	}
- 	*/
- 	
- 	
- 
-/*
-    public void transfer(Node transferNode) {
-    	while (!transferNode.childNodeArr.isEmpty()) {
-    		for (Node temp: transferNode.childNodeArr) {
-    			maze = temp.mazeState;
-    			update(gc);
-    		}
-    	}
-   	}
-  */  
+    }
+    
     @FXML
     void resetMap(ActionEvent event) {
     	final Thread delay = new Thread(){
@@ -366,5 +350,7 @@ public class Controller {
 			}
     	   });
     }
+
+	
     
 }
