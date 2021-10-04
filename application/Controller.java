@@ -29,9 +29,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
 public class Controller implements Initializable {
-	
+
 	ObservableList<String> list = FXCollections.observableArrayList();
-	public int blockSize=20;
+	public int blockSize=12;
 	public int pathingDelay = 100;
 
     public final static int wallCode = 0; // walls
@@ -58,8 +58,8 @@ public class Controller implements Initializable {
 
     @FXML
     private Canvas canvasID;
-    public int rows=31;
-	public int columns=31;
+    public int rows=11;
+	public int columns=11;
 	// Goal
     public int rowEnd = rows-2;
     public int columnEnd = columns-2;
@@ -83,9 +83,11 @@ public class Controller implements Initializable {
     String BFS = "BFS Algorithm";
 	String DFS = "DFS Algorithm";
 	String GreedyBFS = "Best First Search Algorithm";
+	String AStar = "A* Algorithm";
+	
     void loadChoice() {
     	list.removeAll();
-    	list.addAll(BFS,DFS,GreedyBFS);
+    	list.addAll(BFS,DFS,GreedyBFS,AStar);
     	algorithmChoiceBox.getItems().addAll(list);
     }
     
@@ -106,7 +108,7 @@ public class Controller implements Initializable {
     	// loading algorithms
     	if (algorithmChoiceBox.getValue().equals(DFS)) {
     		A = new DFS();
-    		pathingDelay = 100;
+    		pathingDelay = 50;
     	}
     	else if (algorithmChoiceBox.getValue().equals(BFS)) {
     		A = new BFS();
@@ -114,7 +116,11 @@ public class Controller implements Initializable {
     	}
     	else if(algorithmChoiceBox.getValue().equals(GreedyBFS)) {
     		A = new GreedyBFS();
-    		pathingDelay = 100;
+    		pathingDelay = 50;
+    	}
+    	else if (algorithmChoiceBox.getValue().equals(AStar)) {
+    		A = new AStar();
+    		pathingDelay = 50;
     	}
     	else 
     		A = null; 
