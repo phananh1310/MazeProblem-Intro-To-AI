@@ -9,8 +9,7 @@ import java.util.Queue;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
-import algorithms.Algorithms;
-import algorithms.DFS;
+import algorithms.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,7 +32,7 @@ public class Controller implements Initializable {
 	
 	ObservableList<String> list = FXCollections.observableArrayList();
 	public int blockSize=12;
-	public int pathingDelay = 1000;
+	public int pathingDelay = 100;
 
     public final static int wallCode = 0; // walls
     public final static int pathCode = 1; // current path
@@ -59,13 +58,15 @@ public class Controller implements Initializable {
 
     @FXML
     private Canvas canvasID;
-    public int rows=11;
-	public int columns=11;
+    public int rows=31;
+	public int columns=31;
 	// Goal
     public int rowEnd = rows-2;
     public int columnEnd = columns-2;
 
 	private int maze[][] = new int[rows][columns]; // maze contains all 0 - wallCode
+	// initialMaze for reset part
+	private int initialMaze[][] = new int[rows][columns]; // maze contains all 0 - wallCode
 	public GraphicsContext gc;
 	public Node root;
 	
@@ -79,10 +80,9 @@ public class Controller implements Initializable {
 
     @FXML
     private ChoiceBox<String> algorithmChoiceBox;
-    
+    String BFS = "BFS Algorithm";
+	String DFS = "DFS Algorithm";
     void loadChoice() {
-    	String BFS = "BFS Algorithm";
-    	String DFS = "DFS Algorithm";
     	list.removeAll();
     	list.addAll(BFS,DFS);
     	algorithmChoiceBox.getItems().addAll(list);
@@ -93,16 +93,27 @@ public class Controller implements Initializable {
 		loadChoice();
 	}
     
+	Algorithms A;
+
     @FXML
     void startSearching(ActionEvent event) {
 
     	// after the NEW MAP, we would have an initial state of the maze by 2D array
     	// and now we have to make a problem-solved tree from that state
     	// use the algorithm to solve
-    	Algorithms A;
     	
-    	A = new DFS();
-    	
+    	// loading algorithms
+    	if (algorithmChoiceBox.getValue().equals(DFS)) {
+    		A = new DFS();
+    		pathingDelay = 100;
+    	}
+    	else if (algorithmChoiceBox.getValue().equals(BFS)) {
+    		A = new BFS();
+    		pathingDelay = 100;
+    	}
+    	else 
+    		A = null; 
+    	// TO-DO ERROR not choosing algorithms
     	
     	this.Search(A);	
 }
@@ -165,22 +176,11 @@ public class Controller implements Initializable {
     
     @FXML
     void resetMap(ActionEvent event) {
-    	final Thread delay = new Thread(){
-    		public void run(){
-    		for (int i=0;i<5;i++) {
-    			maze[10][10] = i;
-    			try {
-    				Thread.sleep(1000); // new map delay
-    				update(gc);
-    			} catch (InterruptedException e) {
-    			// TODO Auto-generated catch block
-    				e.printStackTrace();
-    			}
-    			if (i==4) i=0;
-    		}
-    		}
-    	};
-    	delay.start(); 
+    	A = null;
+    	for (int i=0;i<rows;i++)
+    		for (int j=0;j<columns;j++)
+    			maze[i][j]=initialMaze[i][j];
+    	update(gc);
     	
     	
     }
@@ -254,6 +254,11 @@ public class Controller implements Initializable {
     	 * start =4, end = 5
     	 * wallCode = 0 
     	 */
+    	
+    	// initial maze = maze
+    	for (int i=0;i<rows;i++)
+    		for (int j=0;j<columns;j++)
+    			initialMaze[i][j]=maze[i][j];
     	
     }
 	
