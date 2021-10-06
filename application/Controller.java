@@ -38,6 +38,8 @@ public class Controller implements Initializable {
 	private int initialMaze[][] = new int[rows][columns]; // maze contains all 0 - wallCode
 	
 	public GraphicsContext gc;
+	// algorithm for searching
+	Algorithms A;
 	
 	public final static int wallCode = 0; // walls
     public final static int pathCode = 1; // current path
@@ -89,7 +91,6 @@ public class Controller implements Initializable {
    
     @FXML
     void startSearching(ActionEvent event) {
-    	Algorithms A;
     	// after the NEW MAP, we would have an initial state of the maze by 2D array
     	// and now we have to make a problem-solved tree from that state
     	// use the algorithm to solve

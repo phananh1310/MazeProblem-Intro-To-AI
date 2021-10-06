@@ -2,9 +2,6 @@ package node;
 import application.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Stack;
 
 public class Node {
 	// import controller for some parameters in controller

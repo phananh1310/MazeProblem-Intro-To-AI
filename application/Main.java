@@ -1,16 +1,10 @@
 package application;
 	
 import javafx.application.Application;
-import javafx.event.*;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;  
 import javafx.stage.Stage;  
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.*;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;  
+
 
 public class Main extends Application{
     
