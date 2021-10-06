@@ -11,3 +11,4 @@ Some important things:
     + main.java: just to launch the program
     
  
+![maze_demo](https://user-images.githubusercontent.com/74826334/136217594-90634a2d-ae2f-4b56-bab8-8a77ae7d4dd6.png)
