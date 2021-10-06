@@ -3,11 +3,7 @@ import node.Node;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Queue;
 import java.util.ResourceBundle;
-import java.util.Stack;
 
 import algorithms.*;
 import javafx.application.Platform;
@@ -16,33 +12,41 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.VPos;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.TextAlignment;
+
 
 public class Controller implements Initializable {
 
 	ObservableList<String> list = FXCollections.observableArrayList();
-	public int blockSize=12;
-	public int pathingDelay = 100;
+	public int blockSize= 35; // size of block
+	
+	public int pathingDelay = 300; // delay finding path
+	
+	// size of maze
+	public int rows=19;
+	public int columns=27;
+	// Goal point
+    public int rowEnd = rows-2;
+    public int columnEnd = columns-2;
 
-    public final static int wallCode = 0; // walls
+	private int maze[][] = new int[rows][columns]; // maze contains all 0 - wallCode
+	// initialMaze for reset part
+	private int initialMaze[][] = new int[rows][columns]; // maze contains all 0 - wallCode
+	
+	public GraphicsContext gc;
+	
+	public final static int wallCode = 0; // walls
     public final static int pathCode = 1; // current path
     public final static int emptyCode = 2; // path can go
     public final static int visitedCode = 3; // visited path
     public final static int startCode = 4; // start point
     public final static int endCode = 5; // end point
-
     
-    // color for wall, path, empty, visited
+    // color for each of code
 	Color[] color = new Color[] {
             Color.AQUA,
             Color.BLACK,
@@ -50,36 +54,23 @@ public class Controller implements Initializable {
             Color.PINK,
             Color.YELLOW,
             Color.RED,
-        };         
+        };  
 	
-
     @FXML
     private Button resetBtn;
 
     @FXML
     private Canvas canvasID;
-    public int rows=11;
-	public int columns=11;
-	// Goal
-    public int rowEnd = rows-2;
-    public int columnEnd = columns-2;
-
-	private int maze[][] = new int[rows][columns]; // maze contains all 0 - wallCode
-	// initialMaze for reset part
-	private int initialMaze[][] = new int[rows][columns]; // maze contains all 0 - wallCode
-	public GraphicsContext gc;
-	public Node root;
 	
     @FXML
     private Button newMapBtn;
 
     @FXML
     private Button startBtn;
-    
-    
 
     @FXML
     private ChoiceBox<String> algorithmChoiceBox;
+    // for choice Box options
     String BFS = "BFS Algorithm";
 	String DFS = "DFS Algorithm";
 	String GreedyBFS = "Best First Search Algorithm";
@@ -95,12 +86,10 @@ public class Controller implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		loadChoice();
 	}
-    
-	Algorithms A;
-
+   
     @FXML
     void startSearching(ActionEvent event) {
-
+    	Algorithms A;
     	// after the NEW MAP, we would have an initial state of the maze by 2D array
     	// and now we have to make a problem-solved tree from that state
     	// use the algorithm to solve
@@ -108,24 +97,20 @@ public class Controller implements Initializable {
     	// loading algorithms
     	if (algorithmChoiceBox.getValue().equals(DFS)) {
     		A = new DFS();
-    		pathingDelay = 50;
     	}
     	else if (algorithmChoiceBox.getValue().equals(BFS)) {
     		A = new BFS();
-    		pathingDelay = 100;
+    		pathingDelay += 200;
     	}
     	else if(algorithmChoiceBox.getValue().equals(GreedyBFS)) {
     		A = new GreedyBFS();
-    		pathingDelay = 50;
     	}
     	else if (algorithmChoiceBox.getValue().equals(AStar)) {
     		A = new AStar();
-    		pathingDelay = 50;
     	}
     	else 
     		A = null; 
     	// TO-DO ERROR not choosing algorithms
-    	
     	this.Search(A);	
 }
 
@@ -135,7 +120,6 @@ public class Controller implements Initializable {
     	
     	// to note the path has gone but not the solution
     	int [][] visited = new int [rows][columns];
-    	
     	//start searching, use a Stack fringe (DFS)
     	A.put(root);
  		final Thread delay = new Thread(){
@@ -152,7 +136,7 @@ public class Controller implements Initializable {
     			maze = newNode.mazeState;
 
     			// note a visited point
-    			visited[newNode.row][newNode.column] = Controller.visitedCode;
+    			visited[newNode.row][newNode.column] = Controller.visitedCode;  
     			
     			// this loop for print the visited point, which is not the current point or the path finding point
     			for (int i=0;i<rows;i++) {
@@ -176,13 +160,14 @@ public class Controller implements Initializable {
     			}
     			
     			ArrayList<Node> Arr = newNode.expand();
-     				for (Node temp: Arr) {
+     			for (Node temp: Arr) {
      					A.put(temp);
-     				}
-    			}
+     			}
+    		}
     		}
     	};
     	delay.start(); 
+    
     }
     
     @FXML
@@ -192,8 +177,6 @@ public class Controller implements Initializable {
     		for (int j=0;j<columns;j++)
     			maze[i][j]=initialMaze[i][j];
     	update(gc);
-    	
-    	
     }
     
 
@@ -229,10 +212,6 @@ public class Controller implements Initializable {
     }
  
     
-    // check if (i,j) is border
-    public boolean checkBorder(int i,int j) {
-    	return i!=rows-1&&j!=columns-1&&i!=0&&j!=0;
-    }
     void breakWallorNot(int row, int col) {
     	// at the wall-point (row,col) consider if it can be break or not
     	// odd row: consider left, right

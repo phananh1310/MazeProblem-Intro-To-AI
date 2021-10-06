@@ -28,12 +28,26 @@ public class Node {
 	
 	// function find the position (R,C) of this NODE in maze
 	public void where() {
-		for (int i=0;i<c.rows;i++)
-			for(int j=0;j<c.columns;j++) {
-				if (mazeState[i][j]==Controller.startCode) {
-					row = i; column = j;
-				}
-			}
+		switch (this.Action) {
+		case MOVEUP:
+			row =parentNode.row-1;
+			column = parentNode.column;
+			break;
+
+		case MOVEDOWN:
+			row =parentNode.row+1;
+			column = parentNode.column;
+			break;
+		case MOVERIGHT:
+			row =parentNode.row;
+			column = parentNode.column+1;
+			break;
+
+		case MOVELEFT:
+			row =parentNode.row;
+			column = parentNode.column-1;
+			break;			
+		}
 	}
 	
 	// Constructor
@@ -56,7 +70,8 @@ public class Node {
 		this.parentNode=null;
 		this.dept=0;
 		this.mazeState=maze;
-		where();
+		row = 1;// start at left corner
+		column =1;
 		this.pathCost = c.rowEnd - this.row + c.columnEnd - this.column;
 
 	}
@@ -134,7 +149,7 @@ public class Node {
 		return arr;
 	};
 	
-	// test this class, view node state in console
+	// for testing this class, view node state in console
 	public void view() {
 		System.out.println(row+","+column);
 		for (int i=0;i<c.rows;i++) {

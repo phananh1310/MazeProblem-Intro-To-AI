@@ -28,7 +28,7 @@ public class GreedyBFS extends Algorithms {
 	             return o1.pathCost > o2.pathCost ? 1 : -1;
 	         }
 		});
-		
+	
 		return fringe.remove(0);
 	}
 	 

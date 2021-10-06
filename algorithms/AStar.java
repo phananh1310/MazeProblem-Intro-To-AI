@@ -20,13 +20,15 @@ public class AStar extends Algorithms{
 	@Override
 	public
 	Node get() {
+		Node r;
 		Collections.sort(fringe,new Comparator<Node>() {
 			@Override
 			 public int compare(Node o1, Node o2) {
-	             return o1.pathCost + o1.dept > o2.pathCost+o2.dept ? 1 : -1;
+	             return (o1.pathCost + o1.dept) > (o2.pathCost+o2.dept) ? 1 : -1;
 	         }
 		});
+		r = fringe.remove(0);
+		return r;
 		
-		return fringe.remove(0);
 	}
 }
